@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+<title>Sign up | Wave AI</title>
+{% endblock title %}
+
+{% block body %}
+<div class="flex flex-col sm:flex-row items-center justify-center self-center min-h-[100vh]">
+    <div class="flex max-w-sm w-full sm:w-1/4 h-auto sm:h-[35rem] flex-col gap-6 bg-white px-5 py-10 shadow-md rounded-2xl sm:rounded-l-2xl z-50">
+        <div class="flex flex-col items-center">
+            <h1 class="text-3xl font-semibold">Sign Up</h1>
+            <p class="text-sm">Sign up to create your account</p>
+        </div>
+        <form action="{% url 'signup' %}" method="POST" class="form-group">
+            {% csrf_token %}
+            <div class="form-field">
+                <label class="form-label">Username</label>
+                {{ form.username }}
+            </div>
+            <div class="form-field">
+                <label class="form-label">Password</label>
+                <div class="form-control">
+                    {{ form.password1 }}
+                </div>
+            </div>
+            <div class="form-field">
+                <label class="form-label">Confirm Password</label>
+                <div class="form-control">
+                    {{ form.password2 }}
+                </div>
+            </div>
+            <div class="form-field text-red-600">
+                <p class="text-sm">{{ form.errors }}</p>
+            </div>
+            <div class="form-field">
+                <div class="form-control justify-between">
+                    <div class="flex gap-2">
+                        <input type="checkbox" class="checkbox" />
+                        <label class="form-label">
+                            <p class="text-sm">By signing up, I agree to the <a href="#" class="link link-underline-hover link-primary text-sm">Terms &amp; Conditions</a></p>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-field pt-5">
+                <div class="flex flex-col form-control justify-between">
+                    <button type="submit" class="btn btn-primary btn-block hover:bg-primary/80">Sign up</button>
+                </div>
+            </div>
+
+            <div class="form-field">
+                <div class="form-control justify-center">
+                    <p class="text-sm">Already have an account? </p>
+                    <a href="{% url 'login' %}" class="link link-underline-hover link-primary text-sm">Log in.</a>
+                </div>
+            </div>
+        </form>
+    </div>
+    <img src="{% static './bin/images/loginImg.jpg' %}" alt="Login Banner Image" class="hidden sm:blockh-[35rem] rounded-r-2xl shadow-md z-90">
+    <img src="{% static './bin/images/BGAesthetic1.png' %}" alt="BG Aesthetic Image" class="absolute w-[10rem] right-0 sm:left-0 bottom-0 sm:top-0 m-2 sm:m-5 z-10 opacity-20 rotate-0 sm:rotate-180">
+    <img src="{% static './bin/images/BGAesthetic2.png' %}" alt="BG Aesthetic Image" class="absolute w-[15rem] left-0 sm:right-0 top-0 m-2 sm:m-5 z-10 opacity-20 rotate-180">
+</div>
+{% endblock body %}
+
+{% block scripts %}
+
+<script>
+    var username = document.getElementById('id_username');
+    var password1 = document.getElementById('id_password1');
+    var password2 = document.getElementById('id_password2');
+
+    window.onload = () => {
+        username.classList.add('input', 'max-w-full', 'w-full')
+        password1.classList.add('input', 'max-w-full', 'w-full')
+        password2.classList.add('input', 'max-w-full', 'w-full')
+    };
+</script>
+
+{% endblock scripts %}

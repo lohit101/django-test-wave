@@ -1,0 +1,39 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" type="image/png" href="{% static './bin/images/favicon.ico' %}"/>
+    <script src="./node_modules/preline/dist/preline.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/rippleui@1.12.1/dist/css/styles.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        clifford: '#da373d',
+                    }
+                }
+            }
+        }
+    </script>
+    {% block title %}
+    {% endblock title %}
+</head>
+
+<body class="bg-[#F3F4F6] min-w-[100dvw] min-h-[100dvh] text-black">
+
+    {% block body %}
+    {% endblock body %}
+
+    
+
+    {% block scripts %}
+    {% endblock scripts %}
+
+</body>
+
+</html>

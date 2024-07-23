@@ -1,0 +1,730 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+<title>Dashboard | Wave UI</title>
+{% endblock title %}
+
+{% block body %}
+<!-- ========== HEADER ========== -->
+<header
+    class="sticky top-0 inset-x-0 flex flex-wrap sm:justify-start sm:flex-nowrap z-[48] w-full bg-white border-b text-sm py-2.5 sm:py-4 lg:ps-64">
+    <nav class="flex basis-full items-center w-full mx-auto px-4 sm:px-6" aria-label="Global">
+        <div class="me-5 lg:me-0 lg:hidden">
+            <!-- Logo -->
+            <a class="flex flex-row w-max items-center justify-center gap-2 rounded-xl text-xl inline-block font-semibold focus:outline-none focus:opacity-80"
+                href="{% url 'dashboard' %}" aria-label="Preline">
+                <img src="{% static './bin/images/logoPrimary.png' %}" alt="Logo Primary" class="w-10">
+                <div class="flex flex-row gap-1">
+                    <p class="font-bold">Wave</p>
+                    <p class="font-bold text-primary">AI</p>
+                </div>
+            </a>
+            <!-- End Logo -->
+        </div>
+
+        <div class="w-full flex items-center justify-end ms-auto sm:justify-between sm:gap-x-3 sm:order-3">
+            <div class="sm:hidden">
+                <button type="button"
+                    class="w-[2.375rem] h-[2.375rem] inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-full border border-transparent text-gray-800 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none">
+                    <svg class="flex-shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8" />
+                        <path d="m21 21-4.3-4.3" />
+                    </svg>
+                </button>
+            </div>
+
+            <div class="hidden sm:block">
+                <label for="icon" class="sr-only">Search</label>
+                <div class="relative min-w-72 md:min-w-80">
+                    <div class="absolute inset-y-0 start-0 flex items-center pointer-events-none z-20 ps-4">
+                        <svg class="flex-shrink-0 size-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" width="24"
+                            height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8" />
+                            <path d="m21 21-4.3-4.3" />
+                        </svg>
+                    </div>
+                    <input type="text" id="icon" name="icon"
+                        class="py-2 px-4 ps-11 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+                        placeholder="Search">
+                </div>
+            </div>
+
+            <div class="flex flex-row items-center justify-end gap-2">
+                <button type="button"
+                    class="w-[2.375rem] h-[2.375rem] inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-full border border-transparent text-gray-800 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none">
+                    <svg class="flex-shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+                        <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+                    </svg>
+                </button>
+
+                <div class="popover">
+                    <label class="popover-trigger btn bg-transparent p-0" tabindex="0">
+                        <img class="w-8"
+                            src="data:image/png;base64,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">
+                    </label>
+                    <div class="popover-content popover-bottom-left bg-white" tabindex="0">
+                        <div class="popover-arrow bg-white"></div>
+                        <div class="p-4 text-sm">And here's some amazing content. It's very engaging. Right?</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+</header>
+<!-- ========== END HEADER ========== -->
+
+<!-- ========== MAIN CONTENT ========== -->
+<!-- Breadcrumb -->
+<div class="sticky top-0 inset-x-0 z-20 bg-white border-y px-4 sm:px-6 md:px-8 lg:hidden">
+    <div class="flex justify-between items-center py-2">
+        <!-- Breadcrumb -->
+        <ol class="ms-3 flex items-center whitespace-nowrap">
+            <li class="flex items-center text-sm text-gray-800">
+                Dashboard
+                <svg class="flex-shrink-0 mx-3 overflow-visible size-2.5 text-gray-400" width="16" height="16"
+                    viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5 1L10.6869 7.16086C10.8637 7.35239 10.8637 7.64761 10.6869 7.83914L5 14"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+            </li>
+            <li class="text-sm font-semibold text-gray-800 truncate" aria-current="page">
+                Reddit Story
+            </li>
+        </ol>
+        <!-- End Breadcrumb -->
+
+        <!-- Sidebar -->
+        <button type="button" id="menuBtn"
+            class="py-2 px-3 flex justify-center items-center gap-x-1.5 text-xs rounded-lg border border-gray-200 text-gray-500 hover:text-gray-600"
+            data-hs-overlay="#application-sidebar" aria-controls="application-sidebar" aria-label="Sidebar">
+            <svg class="flex-shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <path d="M17 8L21 12L17 16M3 12H13M3 6H13M3 18H13" />
+            </svg>
+            <span class="sr-only">Sidebar</span>
+        </button>
+        <!-- End Sidebar -->
+    </div>
+</div>
+<!-- End Breadcrumb -->
+
+<!-- Sidebar -->
+<div id="application-sidebar" class="hs-overlay [--auto-close:lg]
+    hs-overlay-open:translate-x-0
+    -translate-x-full transition-all duration-300 transform
+    w-[260px]
+    fixed inset-y-0 start-0 z-[60]
+    bg-white border-e border-gray-200
+    lg:block lg:translate-x-0 lg:end-auto lg:bottom-0
+   
+   ">
+    <div class="px-3 pt-4">
+        <!-- Logo -->
+        <a class="flex flex-row w-max items-center justify-center gap-2 rounded-xl text-xl inline-block font-semibold focus:outline-none focus:opacity-80"
+            href="../templates/admin/index.html" aria-label="Preline">
+            <img src="{% static './bin/images/logoPrimary.png' %}" alt="Logo Primary" class="w-10">
+            <div class="flex flex-row gap-1">
+                <p class="font-bold">Wave</p>
+                <p class="font-bold text-primary">AI</p>
+            </div>
+        </a>
+        <!-- End Logo -->
+    </div>
+
+    <nav class="hs-accordion-group py-6 px-3 w-full flex flex-col flex-wrap" data-hs-accordion-always-open>
+        <ul class="space-y-1.5">
+            <li>
+                {% if request.resolver_match.url_name == 'dashboard' %}
+                <a class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm bg-gray-100 text-neutral-700 rounded-lg hover:bg-gray-100" href="{% url 'dashboard' %}">
+                {% else %}
+                <a class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-neutral-700 rounded-lg hover:bg-gray-100" href="{% url 'dashboard' %}">
+                {% endif %}
+                    <svg class="flex-shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                        <polyline points="9 22 9 12 15 12 15 22" />
+                    </svg>
+                    Home
+                </a>
+            </li>
+
+            <li>
+                <a class="w-full flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-neutral-700 rounded-lg hover:bg-gray-100"
+                    href="#">
+                    <svg class="flex-shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <rect width="20" height="14" x="2" y="7" rx="2" ry="2" />
+                        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+                    </svg>
+                    Projects
+                </a>
+            </li>
+
+            <li>
+                <a class="w-full flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-neutral-700 rounded-lg hover:bg-gray-100"
+                    href="#">
+                    <svg class="flex-shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <rect width="18" height="18" x="3" y="4" rx="2" ry="2" />
+                        <line x1="16" x2="16" y1="2" y2="6" />
+                        <line x1="8" x2="8" y1="2" y2="6" />
+                        <line x1="3" x2="21" y1="10" y2="10" />
+                        <path d="M8 14h.01" />
+                        <path d="M12 14h.01" />
+                        <path d="M16 14h.01" />
+                        <path d="M8 18h.01" />
+                        <path d="M12 18h.01" />
+                        <path d="M16 18h.01" />
+                    </svg>
+                    Manage
+                </a>
+            </li>
+
+            <li>
+                <a class="w-full flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-neutral-700 rounded-lg hover:bg-gray-100"
+                    href="#">
+                    <svg class="flex-shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+                    </svg>
+                    Documentation
+                </a>
+            </li>
+        </ul>
+        <div class="divider"></div>
+        <ul class="space-y-1.5">
+            <li>
+                {% if request.resolver_match.url_name == 'dashboard_reddit' %}
+                <a class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm bg-gray-100 text-neutral-700 rounded-lg hover:bg-gray-100" href="{% url 'dashboard_reddit' %}">
+                {% else %}
+                <a class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-neutral-700 rounded-lg hover:bg-gray-100" href="{% url 'dashboard_reddit' %}">
+                {% endif %}
+                    <img class="w-4"
+                        src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAABH0lEQVR4nO3UvS4EURjG8Z+vRpREiYJGoVG5g3VROkoJhSgkGglRuAAfnUrnDrAhsgpiVZqRk7ySCTs7sztrK0/y5pyc5znvf86ZyfCvHrSOJrKa1USjE2AQzbOoh06Ab7OusqI+QwdkFYGV9w0d0K+yYQCO//KKjjBeF7DVJTcS42YZoOyp9zDawUuA7U69egG0I3uAsdx6Au6H1y4DdAOu4iX8E0wE6DDWXrFWB5C0jEfcYBankX/GigF9pnOYwRk+4ye3VBTuBzCJc9zhHteYKgqX/a43IreAK3zgKbzbqCzWkneJ+TygEUcsAixGLjV/w26MLUxHtX54CdKz2tiJeRrfc16aF3mV9fMEFxW9ykr3mjamk6QXnL/nX94Xd6qwGirPasAAAAAASUVORK5CYII=">
+                    Reddit Story
+                </a>
+            </li>
+
+            <li class="pointer-events-none">
+                <a class="w-full flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-400 rounded-lg hover:bg-gray-100"
+                    href="#">
+                    <img class="w-4"
+                        src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAACXBIWXMAAAsTAAALEwEAmpwYAAAC1ElEQVR4nO3dy2rUYByG8acIiodFPbsUb0cvQPf1sJAy4AWkSxdeQV0K7kQQ3LvThac6tS69g/7rwp2dT4oplDLTJOMk35vM+8AHpUymyffLTNtkSGAYrQFF7pVw/3oA7AMJeFp+z2VqHZiUGIdjwxp5Gh2DODr8ShHCSEbRw0hG0cNIRtHDSEbRw0hG0cNIRtHDSEbRw0hG0cNIRtHDSEbRw0hGWRzGZ+B3xWN+NHg+H5D8D4wvwGUgKh53C/jU4Hl9PqXszpRD6GnG+ApcKZerAlkFLjVEudfot91Ae1dzsr4dwagLQkOUnUxzINVujYkaA1ePLVcXpAnKwSv1NEveTsUkbQPXpizXBKQuyi9ghSXvWcVbyPUZyzUFqYOy2fK29qILwPspk7MF3DhhuXlADlE+zPiD4WJL29i7Dt63HwGvgNflhxfOViwzL8i8P8+1COJaKAyiVRhEqzCIVmEQrcIgWoVBtAqDaBUG0SoMolUYRKswiFZhEK1iqCA/y9OofRuTCpAQWMd5RuWe5kGnc2AQtHY6g5AfwSDkn3iDkH+yDUL+CTYIPQdZLT+P5IHEHDjnnHPOObcM9fV8yO5Ah4/2Ivafuk9QkR3BIOSfeIOQf7INQv4JNgj5J9UgDAikr+dD9io27KbAOi7V+ZAY6icX+1oYRKswiFZhEK3CIFqFQbQKg2gVBtEqDKJVGESrMIhWYRCtwiDtdQ54ArwB3pZfn28R5AzwEHgBvAQel+vgysuHjwUuE7vV98Pfi2pT6ELKz1nyVsoPh500sdu+1Hh3nQL+1DitOfbF+Lvro9DtKr53uN2y3Ra6ocvdzHMhk295JNiowZ7sm4J1iDJpALOI4ZuBCaEU3exn/W/UAYoxhFCKdvaj4TdqAcUYQijFYvYTN1oAijGEUArv0zoohTF0UApj6KAUxtBBKYyRp/UpKBvGyNt9YN+vDK3WhvI29RfkDqBBGwcFBgAAAABJRU5ErkJggg==">
+                    Split-screen Video
+                    <p class="bg-primary text-white text-[.5rem] py-[.2rem] px-[.5rem] rounded-full whitespace-nowrap">COMING SOON</p>
+                </a>
+            </li>
+
+            <li class="pointer-events-none">
+                <a class="w-full flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-400 rounded-lg hover:bg-gray-100"
+                    href="#">
+                    <img class="w-4"
+                        src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAACXBIWXMAAAsTAAALEwEAmpwYAAAHKklEQVR4nO2da4hVVRSAvwG9Mzmao45k2gMNQs0e2GhpBpFmNZkKPQghqLDopZX/eqEGPcwXmhHVjyhRKqT/YdlDKDDSyXe+LcJ0fFWUSo4nNqwLcRnPXmfO3mefe+d8sECuc9Zee99z9tl7rbXXhYKCgoKCgoKCgoKCgnwxEJgMzALeBtYCm4G9wHHgjMhx+Wyz/M0K4Gm5tjl0J6qJC4C7gaXAT8A5IEopHUAbsASYAjSE7mQeuR5YBhx1MOA2OQl8BEwC6ujGlIBHgd0ZDPr5ZBcwU2zpVtPMM8CvAQe+Un6R90zNT0+3AjtyMODReWQP0EoNcgnwWQ4GOFLKGmAINYJZ1RzLwaBGXXhZ30MVU5KlX9ql5CHgU2Au8AAwGhgK9AN6ivSTz0bL38yVaw6lbNvYvlDaqCqagG9SdPw7eSmOdGCL0TEb+D6FPV8BfakSLpZNVNJOngBeA670aJvR/bq0ldS+TcAgcs4VwL6EHTsCPA9cmKGd5m5+AWhPaKtxdwwjpwxOOPgdsiNtDjxVmh342QR275OnPFc0JZx2tgMt5IexCfcnm/L0TiglfOF+CDSSP3oDKxP0Yx3QgxywWGmwecwfJ/88mWBKeiO0sXcp1/mngfuoHqYBpxT9Mn2fGtK9oNnhmo5MpPqYJDeOrX/tsgDJHI1vxzzK91K9TAX+VfTz46wNa1XOkdUw59t4StnX28jQn79HudqpFVYq+vszUJ+FMc8qjelD7dAoexdbv83T4pV6RSSrI2ebLJebtQ5L3w/69pw+prgLTPpIrfKuov+P+Gq8ToLYNsea8c0n5Trx4a8Tl8BfwN9yR30NvAJMSGG7K/39FZkbO31lW9ys+PaNVzMJ04FtylWGkS3AQwk66EP/iwo9N+GB9y2NnkjgoLoMWJ9gYCplvegIob9JwpVx15upyvnS09aoCXRoGA/8nmJwIlmRNAbSb1iguBkbXAfWbUZrIlnjlT6WKEbM3H1VIP1lhiv0OE1vWaqI4dq43MGdGckcHUJ/JRssekww3xm2YIsJoNtIMydHIh8E1F/JcxZdG3GYIm5zOY9QrEbSDs5WoFcg/Z0xyqLPbNoG4IDJloYOKZaF25Rz7yJgjLwAe8mOeqm4vUcE1N8Zps+HLW0al3ZqZlka+USxCdIEuofH6GgMqD+ONVn4hlZYGjE7zDjmKe7M4Sns860/jvmWtpe7aGStpRGTChjHl5brF6W0z7f+OGZY2v7cRSNbLI2YfMw4dlqub0lpn2/9cbRY2jarx9QcsDQS5xJAHF9x1zemtM+3/jiGKt49qbEF3o2HMI7IImnxrT+OZkXAPjVnLI2UuvEXUG9p22RVpKb4AgJ/AcUUFHgKsr2EjRMsjj8t1/dOaZ9v/cFfwps9L0PHpLTPt/7gy1DfG7HFKe3zrT/4RiytK2Ku5fp/Up4F860/uCvC5owzpxHjuNZyfQTst0ShGgPqD+6Mc+GO3qoYpFNyrPUGeXH2kvl7mcJd7Ft/UHd0syIjbKQi3z7yGDCZ5ll/Z1xt0deh8BKoabM0Zs7h2khzbjhShAx9669kjkXXjzhkiaUxcwjahjnE8JvHoPlgz/or+cGi500cMsVRWso4z2kj4zJKSxmh0HMnDmlQnC7XJmaNc1DDYXvMysW3fk1i1nEfZwXec5iaeGnKOftbSxzCp36TmviH5fp38MAEheHm+H/SM1hbEgyMWQw8mCA514f+lxV6TIaec+rk5IvN+9eVpdc10rEv5PEvp4/vl5TyeSk75Ur/AIV3eIfPYoAzFd++l8cvJ9gyxI087NOAkhS4s21AzHGeWuNGxYZ0fxbFnWYr7oJdNXZIr7eymMcTWRjToKz1aY521gqrFP3dkWX90TuUqwpT+KLamaXsa+blGGyu2PL7oJqKdHTm5NNUTllNAIYoaz2fduWWzWmxjiMhK2i1KsvVmNSW+6kepit9SuYJvz20sQuVc+TZLI7yO5rzbcvNspgqj8HpKXU1NQaXV0c+U0W6Sh/laqcsa/NSsgxxwtmCNpVLtrHka5Nlc7NUBltyt88ZmLAT56RspbkuFP26ULZyb54LuA4TA6MEchR4Sdy8WdEkzrmkRcX3SDZcrhkkdTWjhHJSqhD6Ok5UjmQtUPjzzzftXESV0FfcvFEXZYOcwx2V0rVbJ9kLcxQxXNsLN3dzvo0eckenLV9/WHbd8yUVsEWmuv7ieynJv4fJ/82Q8jNrFHk7NjHL0VfztNrpChMdlRCIMpZ214H1kAyW0o5RlcjqPBbodsEtyuJ3USDZnQfXgm/qxSVxMAcDXpYDEkzpVr8nVpICd0k2b65lp8Rwq+43Ynz9lGF7BoNu8peKnzKMCXe2yqmWjQm8knHSIZuohbKqyaS6ba0wQAIj5p3xlhz5aRN3x7H//ZztMfmsTf5muYRDJ7lMES8oKCgoKCgoKCgoKMAB/wHvlP4dc1G0FAAAAABJRU5ErkJggg==">
+                    Generate Captions
+                    <p class="bg-primary text-white text-[.5rem] py-[.2rem] px-[.5rem] rounded-full whitespace-nowrap">COMING SOON</p>
+                </a>
+            </li>
+        </ul>
+        <div class="fixed bottom-0 end-0 z-[60] w-full mx-0 p-2">
+            <!-- Card -->
+            <div class="p-3 bg-gradient-to-br from-violet-700 to-sky-500 rounded-xl shadow-sm">
+                <p class="mt-2 text-sm text-white">
+                    Upgrade to pro and generate faster, cleaner, and high quality videos.
+                </p>
+                <a class="mt-2 inline-flex justify-center items-center gap-x-1 font-semibold text-white/80 hover:text-white text-sm"
+                    href="#">
+                    Learn more
+                    <svg class="flex-shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="m9 18 6-6-6-6" />
+                    </svg>
+                </a>
+                <div class="mt-5 flex justify-between gap-x-2">
+                    <button type="button"
+                        class="w-full justify-center py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-full border-2 border-white text-white hover:bg-white hover:text-primary disabled:opacity-50 disabled:pointer-events-none transition-all">
+                        Upgrade to Pro
+                    </button>
+                </div>
+            </div>
+            <!-- End Card -->
+        </div>
+    </nav>
+</div>
+<!-- End Sidebar -->
+
+<!-- Content -->
+<div class="w-full lg:ps-64">
+    <div class="p-4 sm:p-6 space-y-4 sm:space-y-6">
+        <!-- your content goes here ... -->
+        <div class="flex flex-col bg-white rounded-2xl p-5 z-50">
+            <div id="manualSection" class="flex flex-col">
+                <p class="font-bold text-2xl">Create content with Reddit</p>
+                <p class="text-sm">Generate faceless content for Instagram, Youtube, and TikTok with stories from
+                    Reddit...</p>
+                <div class="flex flex-col sm:flex-row gap-2 sm:gap-3 mt-5">
+                    <button id="selectManualBtn"
+                        class="btn btn-block w-full sm:w-max btn-outline-primary btn-md text-sm">Generate video</button>
+                </div>
+            </div>
+            <div id="sectionDivider" class="divider text-sm text-gray-400">OR</div>
+            <div id="aiSection" class="flex flex-col">
+                <p class="font-bold text-2xl">Create content with Wave AI</p>
+                <p class="text-sm">Let Wave AI generate faceless content for Instagram, Youtube, and TikTok with stories
+                    from Reddit...</p>
+                <div class="flex flex-col sm:flex-row gap-2 sm:gap-3 mt-5">
+                    <label for="modal-4" id="selectAiBtn" class="btn btn-block w-full sm:w-max btn-primary btn-md text-sm">&#10024;
+                        Generate with AI</label>
+
+                        <input class="modal-state" id="modal-4" type="checkbox" />
+                        <div class="modal bg-black/20 backdrop-blur-sm">
+                            <label class="modal-overlay"></label>
+                            <div class="modal-content flex flex-col gap-5 bg-white shadow-sm">
+                                <label id="modalCloseBtn" for="modal-4" class="hidden btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</label>
+                                <div id="progressSpinner" class="flex flex-col items-center justify-center gap-5 mt-5">
+                                    <svg class="spinner-ring" viewBox="25 25 50 50" stroke-width="5">
+                                        <circle cx="50" cy="50" r="20" />
+                                    </svg>
+                                    <p>Your video is being generated. Please do not close this page...</p>
+                                </div>
+                                <div id="donwloadSection" class="flex hidden flex-col">
+                                    <p class="text-xl font-semibold text-black mt-5">Your video is ready</p>
+                                    <p class="mb-5">Download now to share it with the world</p>
+                                    <video class="rounded-2xl" id="finalVideo" src="" width="400" controls></video>
+                                </div>
+                                <div class="flex gap-3">
+                                    <a id="downloadBtn" class="hidden w-full" href="" download="RedditVideo.mp4" target="_blank">
+                                        <button class="btn btn-primary btn-block w-full">Download</button>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="storySelectSection" class="flex hidden flex-col bg-white rounded-2xl p-5 z-50">
+            <p class="font-bold text-2xl">Select a subreddit</p>
+            <p class="text-sm">Select a subreddit to generate stories from...</p>
+
+            <div class="flex flex-col mt-5">
+                <ul class="grid w-full gap-6 md:grid-cols-2">
+                    <li>
+                        <input type="radio" id="askreddit" name="hosting" value="askreddit" class="hidden peer"
+                            required />
+                        <label onclick="getStoryManual('askreddit')" for="askreddit"
+                            class="border border-2 border-primary rounded-full py-2 px-4 text-primary bg-white peer-checked:text-white peer-checked:bg-[#0072F5] transition-all">
+                            r/askreddit
+                        </label>
+                    </li>
+                    <li>
+                        <input type="radio" id="jokes" name="hosting" value="jokes" class="hidden peer" required />
+                        <label onclick="getStoryManual('jokes')" for="jokes"
+                            class="border border-2 border-primary rounded-full py-2 px-4 text-primary bg-white peer-checked:text-white peer-checked:bg-[#0072F5] transition-all">
+                            r/jokes
+                        </label>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="skeletonSection" class="hidden skeleton h-24 rounded-2xl"></div>
+
+        <div id="postSelectionSection" class="flex hidden flex-col bg-white rounded-2xl p-5 z-40">
+            <p class="font-bold text-2xl">Select a post</p>
+            <p class="text-sm">Select a post you like...</p>
+
+
+            <div class="mx-auto w-full mt-5">
+                <div class="divide-y divide-gray-200 border-y border-gray-200">
+                    <div onclick="getComments('post1')" class="flex justify-between space-x-2 py-3">
+                        <label for="example12" class="text-sm">
+                            <div id="post1" class="font-medium text-gray-700">This is a slightly long text to showcase
+                                the UI of this element</div>
+                            <p class="text-primary">Top ranked post</p>
+                        </label>
+                        <div class="flex h-5 items-center">
+                            <input type="radio" id="example12" name="checkGroup5"
+                                class="h-4 w-4 rounded-full border-gray-300 text-primary-600 shadow-sm focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 focus:ring-offset-0 disabled:cursor-not-allowed disabled:text-gray-400" />
+                        </div>
+                    </div>
+                    <div onclick="getComments('post2')" class="flex justify-between space-x-2 py-3">
+                        <label for="example13" class="text-sm">
+                            <div id="post2" class="font-medium text-gray-700">This is a slightly long text to showcase
+                                the UI of this element</div>
+                        </label>
+                        <div class="flex h-5 items-center">
+                            <input type="radio" id="example13" name="checkGroup5"
+                                class="h-4 w-4 rounded-full border-gray-300 text-primary-600 shadow-sm focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 focus:ring-offset-0 disabled:cursor-not-allowed disabled:text-gray-400" />
+                        </div>
+                    </div>
+                    <div onclick="getComments('post3')" class="flex justify-between space-x-2 py-3">
+                        <label for="example14" class="text-sm">
+                            <div id="post3" class="font-medium text-gray-700">This is a slightly long text to showcase
+                                the UI of this element</div>
+                        </label>
+                        <div class="flex h-5 items-center">
+                            <input type="radio" id="example14" name="checkGroup5"
+                                class="h-4 w-4 rounded-full border-gray-300 text-primary-600 shadow-sm focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 focus:ring-offset-0 disabled:cursor-not-allowed disabled:text-gray-400" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="commentSelectionSection" class="flex hidden flex-col bg-white rounded-2xl p-5 z-40">
+            <p class="font-bold text-2xl">Select a comment</p>
+            <p class="text-sm">Select a comment you like...</p>
+
+
+            <div class="mx-auto w-full mt-5">
+                <div class="divide-y divide-gray-200 border-y border-gray-200">
+                    <div onclick="setTree('comment1')" class="flex justify-between space-x-2 py-3">
+                        <label for="example1" class="text-sm">
+                            <div id="comment1" class="font-medium text-gray-700">This is a slightly long text to
+                                showcase the UI of this element</div>
+                            <p class="text-primary">Top ranked comment</p>
+                        </label>
+                        <div class="flex h-5 items-center">
+                            <input type="radio" id="example1" name="checkGroup1"
+                                class="h-4 w-4 rounded-full border-gray-300 text-primary-600 shadow-sm focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 focus:ring-offset-0 disabled:cursor-not-allowed disabled:text-gray-400" />
+                        </div>
+                    </div>
+                    <div onclick="setTree('comment2')" class="flex justify-between space-x-2 py-3">
+                        <label for="example2" class="text-sm">
+                            <div id="comment2" class="font-medium text-gray-700">This is a slightly long text to
+                                showcase the UI of this element</div>
+                        </label>
+                        <div class="flex h-5 items-center">
+                            <input type="radio" id="example2" name="checkGroup1"
+                                class="h-4 w-4 rounded-full border-gray-300 text-primary-600 shadow-sm focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 focus:ring-offset-0 disabled:cursor-not-allowed disabled:text-gray-400" />
+                        </div>
+                    </div>
+                    <div onclick="setTree('comment3')" class="flex justify-between space-x-2 py-3">
+                        <label for="example3" class="text-sm">
+                            <div id="comment3" class="font-medium text-gray-700">This is a slightly long text to
+                                showcase the UI of this element</div>
+                        </label>
+                        <div class="flex h-5 items-center">
+                            <input type="radio" id="example3" name="checkGroup1"
+                                class="h-4 w-4 rounded-full border-gray-300 text-primary-600 shadow-sm focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 focus:ring-offset-0 disabled:cursor-not-allowed disabled:text-gray-400" />
+                        </div>
+                    </div>
+                    <div onclick="setTree('comment4')" class="flex justify-between space-x-2 py-3">
+                        <label for="example4" class="text-sm">
+                            <div id="comment4" class="font-medium text-gray-700">This is a slightly long text to
+                                showcase the UI of this element</div>
+                        </label>
+                        <div class="flex h-5 items-center">
+                            <input type="radio" id="example4" name="checkGroup1"
+                                class="h-4 w-4 rounded-full border-gray-300 text-primary-600 shadow-sm focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 focus:ring-offset-0 disabled:cursor-not-allowed disabled:text-gray-400" />
+                        </div>
+                    </div>
+                    <div onclick="setTree('comment5')" class="flex justify-between space-x-2 py-3">
+                        <label for="example5" class="text-sm">
+                            <div id="comment5" class="font-medium text-gray-700">This is a slightly long text to
+                                showcase the UI of this element</div>
+                        </label>
+                        <div class="flex h-5 items-center">
+                            <input type="radio" id="example5" name="checkGroup1"
+                                class="h-4 w-4 rounded-full border-gray-300 text-primary-600 shadow-sm focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 focus:ring-offset-0 disabled:cursor-not-allowed disabled:text-gray-400" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <label for="modal-3" id="generateBtn" class="hidden btn btn-block w-full btn-primary">Generate video</label>
+
+        <input class="modal-state" id="modal-3" type="checkbox" />
+        <div class="modal bg-black/20 backdrop-blur-sm">
+            <label class="modal-overlay"></label>
+            <div class="modal-content flex flex-col gap-5 bg-white shadow-sm">
+                <label id="modalCloseBtn" for="modal-3" class="hidden btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</label>
+                <div id="progressSpinner" class="flex flex-col items-center justify-center gap-5 mt-5">
+                    <svg class="spinner-ring" viewBox="25 25 50 50" stroke-width="5">
+                        <circle cx="50" cy="50" r="20" />
+                    </svg>
+                    <p>Your video is being generated. Please do not close this page...</p>
+                </div>
+                <div id="donwloadSection" class="flex hidden flex-col">
+                    <p class="text-xl font-semibold text-black mt-5">Your video is ready</p>
+                    <p class="mb-5">Download now to share it with the world</p>
+                    <video class="rounded-2xl" id="finalVideo" src="" width="400" controls></video>
+                </div>
+                <div class="flex gap-3">
+                    <a id="downloadBtn" class="hidden w-full" href="" download="RedditVideo.mp4" target="_blank">
+                        <button class="btn btn-primary btn-block w-full">Download</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- <img src="{% static './bin/images/BGAesthetic2.png' %}" alt="BG Aesthetic Image"
+            class="block absolute w-[15rem] right-0 bottom-0 m-2 -rotate-90 sm:m-5 z-0 opacity-20"> -->
+
+    </div>
+
+</div>
+<!-- End Content -->
+<!-- ========== END MAIN CONTENT ========== -->
+{% endblock body %}
+
+{% block scripts %}
+<script src="{% static './bin/js/sidebar.js' %}"></script>
+
+<script>
+    var manualSection = document.getElementById('manualSection');
+    var aiSection = document.getElementById('aiSection');
+    var sectionDivider = document.getElementById('sectionDivider');
+
+    var selectManualBtn = document.getElementById('selectManualBtn');
+    var selectAiBtn = document.getElementById('selectAiBtn');
+
+    var storySelectSection = document.getElementById('storySelectSection');
+
+    selectManualBtn.onclick = function selectManual() {
+        aiSection.classList.add('hidden');
+        sectionDivider.classList.add('hidden');
+
+        selectManualBtn.classList.add('btn-loading');
+        selectManualBtn.disabled = true;
+
+        storySelectSection.classList.remove('hidden');
+    }
+
+    selectAiBtn.onclick = function selectAi() {
+        manualSection.classList.add('hidden');
+        sectionDivider.classList.add('hidden');
+
+        selectAiBtn.classList.add('btn-loading');
+        selectAiBtn.disabled = true;
+
+        fetch('/api/v0/getstory/')
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+
+                fetch('/testurl/')
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data);
+                    })
+
+                modalCloseBtn.classList.remove('hidden');
+                if (isMobileDevice()) {
+                    finalVideo.src = data['response'];
+                    downloadBtn.setAttribute('href', data['response']);
+                } else {
+                    finalVideo.src = data['response'].replace('.mp4', '.mov');
+                    downloadBtn.setAttribute('href', data['response'].replace('.mp4', '.mov'));
+                }
+                downloadBtn.classList.remove('hidden');
+                progressSpinner.classList.add('hidden');
+                donwloadSection.classList.remove('hidden');
+            })
+    }
+</script>
+
+<script>
+    var storySelectSection = document.getElementById('storySelectSection');
+
+    var post1 = document.getElementById('post1');
+    var post2 = document.getElementById('post2');
+    var post3 = document.getElementById('post3');
+
+    var comment1 = document.getElementById('comment1');
+    var comment2 = document.getElementById('comment2');
+    var comment3 = document.getElementById('comment3');
+    var comment4 = document.getElementById('comment4');
+    var comment5 = document.getElementById('comment5');
+
+    var skeletonSection = document.getElementById('skeletonSection');
+
+    var postSelectionSection = document.getElementById('postSelectionSection');
+    var commentSelectionSection = document.getElementById('commentSelectionSection');
+
+    var generateBtn = document.getElementById('generateBtn');
+
+    var modalCloseBtn = document.getElementById('modalCloseBtn');
+    var progressSpinner = document.getElementById('progressSpinner');
+    var finalVideo = document.getElementById('finalVideo');
+    var donwloadSection = document.getElementById('donwloadSection');
+    var downloadBtn = document.getElementById('downloadBtn');
+
+    let postTree = {}
+    let setTreeComments = []
+    let setTreeCommentsTree = {}
+
+    function getStoryManual(subreddit) {
+        storySelectSection.classList.add('pointer-events-none');
+        skeletonSection.classList.remove('hidden');
+
+        fetch('/api/v0/getstory/' + subreddit + '/')
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+
+                postTree = data['response'];
+
+                console.log(postTree);
+
+                post1.innerHTML = data['response'][0][0];
+                post2.innerHTML = data['response'][1][0];
+                post3.innerHTML = data['response'][2][0];
+
+                postSelectionSection.classList.remove('hidden');
+                skeletonSection.classList.add('hidden');
+            });
+    }
+
+    function getComments(post) {
+        commentSelectionSection.classList.remove('hidden');
+
+        if (post === 'post1') {
+            setTreeComments[0] = postTree[0][0];
+
+            setTreeCommentsTree[0] = postTree[0][1];
+            setTreeCommentsTree[1] = postTree[0][2];
+            setTreeCommentsTree[2] = postTree[0][3];
+            setTreeCommentsTree[3] = postTree[0][4];
+            setTreeCommentsTree[4] = postTree[0][5];
+
+            comment1.innerHTML = postTree[0][1];
+            comment2.innerHTML = postTree[0][2];
+            comment3.innerHTML = postTree[0][3];
+            comment4.innerHTML = postTree[0][4];
+            comment5.innerHTML = postTree[0][5];
+        } else if (post === 'post2') {
+            setTreeComments[0] = postTree[1][0];
+
+            setTreeCommentsTree[0] = postTree[1][1];
+            setTreeCommentsTree[1] = postTree[1][2];
+            setTreeCommentsTree[2] = postTree[1][3];
+            setTreeCommentsTree[3] = postTree[1][4];
+            setTreeCommentsTree[4] = postTree[1][5];
+
+            comment1.innerHTML = postTree[1][1];
+            comment2.innerHTML = postTree[1][2];
+            comment3.innerHTML = postTree[1][3];
+            comment4.innerHTML = postTree[1][4];
+            comment5.innerHTML = postTree[1][5];
+        } else if (post === 'post3') {
+            setTreeComments[0] = postTree[2][0];
+
+            setTreeCommentsTree[0] = postTree[2][1];
+            setTreeCommentsTree[1] = postTree[2][2];
+            setTreeCommentsTree[2] = postTree[2][3];
+            setTreeCommentsTree[3] = postTree[2][4];
+            setTreeCommentsTree[4] = postTree[2][5];
+
+            comment1.innerHTML = postTree[2][1];
+            comment2.innerHTML = postTree[2][2];
+            comment3.innerHTML = postTree[2][3];
+            comment4.innerHTML = postTree[2][4];
+            comment5.innerHTML = postTree[2][5];
+        }
+    }
+
+    function setTree(comment) {
+        generateBtn.classList.remove('hidden');
+
+        if (comment === 'comment1') {
+            setTreeComments[1] = setTreeCommentsTree[0];
+        } else if (comment === 'comment2') {
+            setTreeComments[1] = setTreeCommentsTree[1];
+        } else if (comment === 'comment3') {
+            setTreeComments[1] = setTreeCommentsTree[2];
+        } else if (comment === 'comment4') {
+            setTreeComments[1] = setTreeCommentsTree[3];
+        } else if (comment === 'comment5') {
+            setTreeComments[1] = setTreeCommentsTree[4];
+        }
+
+        console.log(setTreeComments);
+    }
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    const csrftoken = getCookie('csrftoken');
+
+    function isMobileDevice() {
+        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i
+            .test(navigator.userAgent);
+    }
+
+    generateBtn.onclick = () => {
+        generateBtn.classList.add('btn-loading');
+        generateBtn.disabled = true;
+
+        // fetch('/testurl/')
+        //     .then(response => response.json())
+        //     .then(data => {
+        //         console.log(data);
+        //         modalCloseBtn.classList.remove('hidden');
+        //         finalVideo.src = data['response'];
+        //         downloadBtn.classList.remove('hidden');
+        //         progressSpinner.classList.add('hidden');
+        //         donwloadSection.classList.remove('hidden');
+        //     })
+
+        postSelectionSection.classList.add('pointer-events-none');
+        commentSelectionSection.classList.add('pointer-events-none');
+
+        data = {
+            'data' : setTreeComments
+        }
+
+        fetch("/api/v0/create/", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken
+            },
+            body: JSON.stringify(data),
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                modalCloseBtn.classList.remove('hidden');
+                if (isMobileDevice()) {
+                    finalVideo.src = data['response'];
+                    downloadBtn.setAttribute('href', data['response']);
+                } else {
+                    finalVideo.src = data['response'].replace('.mp4', '.mov');
+                    downloadBtn.setAttribute('href', data['response'].replace('.mp4', '.mov'));
+                }
+                downloadBtn.classList.remove('hidden');
+                progressSpinner.classList.add('hidden');
+                donwloadSection.classList.remove('hidden');
+            })
+    }
+</script>
+{% endblock scripts %}
